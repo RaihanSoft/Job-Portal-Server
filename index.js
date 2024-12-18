@@ -29,6 +29,10 @@ async function run() {
 
         //! 10 json data load in client with this
         const jobsCollection = client.db("job-portal").collection("jobs");
+        const jobsApplicationsCollection = client.db("job-portal").collection("job-appllications");
+
+
+
         app.get('/jobs', async (req, res) => {
             const cursor = jobsCollection.find()
             const result = await cursor.toArray()
@@ -43,6 +47,22 @@ async function run() {
             const result = await jobsCollection.findOne(query);
             res.send(result)
 
+        })
+
+        // ! job applications 
+
+        app.post('/job-applications', async (req, res) => {
+            const applications = req.body;
+            const result = await jobsApplicationsCollection.insertOne(applications)
+            res.send(result)
+
+        })
+        // ! job applications get all data, get one data , get some data
+        app.get('/job-application', async (req, res) => {
+            const email = req.query.email;
+            const query = { applicant_email: email }
+            const result = await jobsApplicationsCollection.find(query).toArray()
+            res.send(result)
         })
 
 
