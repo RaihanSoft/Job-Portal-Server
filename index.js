@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express')
 const cors = require('cors')
 const app = express()
@@ -29,15 +29,24 @@ async function run() {
 
         //! 10 json data load in client with this
         const jobsCollection = client.db("job-portal").collection("jobs");
-        app.get('/jobs', async(req, res)=>{
+        app.get('/jobs', async (req, res) => {
             const cursor = jobsCollection.find()
             const result = await cursor.toArray()
             res.send(result)
 
         })
-       
 
-      
+        //! jobs details 
+        app.get('/jobs/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await jobsCollection.findOne(query);
+            res.send(result)
+
+        })
+
+
+
 
 
 
